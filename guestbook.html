@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>دفترچه یادبود | یادبود کسری</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">کسری</a>
+      <nav class="nav">
+        <a href="biography.html">زندگی‌نامه</a>
+        <a href="music.html">آثار</a>
+        <a href="gallery.html">گالری</a>
+        <a href="guestbook.html" class="active">دفترچه یادبود</a>
+      </nav>
+      <button class="menu-btn" onclick="toggleMenu()" aria-label="منو">☰</button>
+    </div>
+    <nav class="mobile-nav" id="mobileNav">
+      <a href="index.html">خانه</a>
+      <a href="biography.html">زندگی‌نامه</a>
+      <a href="music.html">آثار</a>
+      <a href="gallery.html">گالری</a>
+      <a href="guestbook.html" class="active">دفترچه یادبود</a>
+    </nav>
+  </header>
+
+  <main class="container" style="padding: 4rem 1rem;">
+    <div class="page-header">
+      <h1>دفترچه یادبود</h1>
+      <div class="divider"></div>
+      <p>در این گوشه از خاطره، یاد و کلامی از کسرا را جاودانه کنید. هر خاطره، لبخند، یا پیام عاشقانه‌ای که از او در سینه دارید، پلی است به سوی کسرا؛ صفحه‌ای بگشایید تا این داستانِ زیبا در قلب‌های ما ادامه یابد.</p>
+    </div>
+
+    <div class="guestbook-layout">
+      <!-- فرم -->
+      <div class="form-card">
+        <h3>پیام خود را بنویسید</h3>
+        <div id="formMessage"></div>
+        <form id="guestbookForm" onsubmit="submitForm(event)">
+          <div class="form-group">
+            <label for="name">نام *</label>
+            <input type="text" id="name" required placeholder="نام خود را وارد کنید">
+          </div>
+          <div class="form-group">
+            <label for="email">ایمیل (اختیاری)</label>
+            <input type="email" id="email" placeholder="example@email.com">
+          </div>
+          <div class="form-group">
+            <label for="message">پیام یا خاطره شما *</label>
+            <textarea id="message" required placeholder="خاطره یا پیام تسلیت خود را بنویسید..."></textarea>
+          </div>
+          <button type="submit" class="form-submit" id="submitBtn">ارسال پیام</button>
+        </form>
+      </div>
+
+      <!-- لیست پیام‌ها -->
+      <div>
+        <h2 class="messages-header"><span class="dot">●</span> پیام‌های ثبت شده</h2>
+        <div id="messagesList"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>یادبود کسری — همیشه در قلب‌های ما</p>
+    <p>برای حفظ خاطرات و آثار یک هنرمند عزیز</p>
+  </footer>
+
+  <script src="js/guestbook.js"></script>
+  <script src="js/unregister-sw.js"></script>
+  <audio id="audioPlayer" preload="metadata"></audio>
+  <script src="js/persistent-audio.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
