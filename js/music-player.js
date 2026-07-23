@@ -1,5 +1,5 @@
 const tracks = [
-  { id: 1, title: 'BLOOD&INK', src: 'audio/BLOOD&INK.mp3', duration: '—' },
+  { id: 1, title: 'BLOOD&INK', src: 'audio/BLOODandINK.mp3', duration: '—' },
   { id: 2, title: 'ORIGIN', src: 'audio/ORIGIN.mp3', duration: '—' },
   { id: 3, title: 'TRAPVIRUS', src: 'audio/TRAPVIRUS.mp3', duration: '—' },
 ];
