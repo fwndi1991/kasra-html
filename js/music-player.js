@@ -43,7 +43,7 @@ function renderPlaylist() {
   playlistList.innerHTML = tracks.map((t, i) => `
     <button class="playlist-item ${i === currentTrack ? 'active' : ''}" onclick="playTrack(${i})">
       <span>${t.title}</span>
-      <a href="${t.src}" download="${t.title}.mp3" class="playlist-download" onclick="event.stopPropagation()" aria-label="دانلود">
+      <a href="${t.src}" download="${t.src.split('/').pop()}" class="playlist-download" onclick="event.stopPropagation()" aria-label="دانلود">
         <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>
       </a>
     </button>
