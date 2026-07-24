@@ -1,25 +1,10 @@
-const STORAGE_KEY = 'kasra-guestbook';
-
-function getEntries() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  } catch {
-    return [];
-  }
-}
-
-function saveEntries(entries) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-}
+const SUPABASE_URL = 'https://jxuklwbckjmvibsadavi.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4dWtsd2Jja2ptdm1pYnNkYXZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MTA4NjQsImV4cCI6MjEwMDQ4Njg2NH0.yUCjWAmFC358rt41TVDM3FCqzvKXznbijwJEbyUaER8';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 function formatDate(iso) {
   const d = new Date(iso);
   return d.toLocaleDateString('fa-IR');
-}
-
-function toPersianNum(num) {
-  const persianDigits = '۰۱۲۳۴۵۶۷۸۹';
-  return String(num).replace(/\d/g, d => persianDigits[d]);
 }
 
 function escapeHtml(str) {
@@ -28,11 +13,16 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-function renderMessages() {
-  const entries = getEntries();
+async function renderMessages() {
   const list = document.getElementById('messagesList');
+  list.innerHTML = '<p style="text-align:center;color:#999;">در حال بارگذاری...</p>';
 
-  if (entries.length === 0) {
+  const { data, error } = await supabase
+    .from('messages')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error || !data || data.length === 0) {
     list.innerHTML = `
       <div class="empty-state">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -45,13 +35,13 @@ function renderMessages() {
     return;
   }
 
-  list.innerHTML = entries.map(e => `
+  list.innerHTML = data.map(e => `
     <div class="message-card">
       <div class="message-header">
         <div class="message-avatar">${escapeHtml(e.name.charAt(0))}</div>
         <div>
           <p class="message-name">${escapeHtml(e.name)}</p>
-          <p class="message-date">${formatDate(e.createdAt)}</p>
+          <p class="message-date">${formatDate(e.created_at)}</p>
         </div>
       </div>
       <p class="message-text">${escapeHtml(e.message)}</p>
@@ -59,7 +49,7 @@ function renderMessages() {
   `).join('');
 }
 
-function submitForm(event) {
+async function submitForm(event) {
   event.preventDefault();
 
   const name = document.getElementById('name').value.trim();
@@ -72,28 +62,23 @@ function submitForm(event) {
   submitBtn.disabled = true;
   submitBtn.textContent = 'در حال ارسال...';
 
-  setTimeout(() => {
-    const entries = getEntries();
-    entries.unshift({
-      id: Date.now(),
-      name: name.slice(0, 100),
-      message: message.slice(0, 2000),
-      createdAt: new Date().toISOString()
-    });
-    saveEntries(entries);
+  const { error } = await supabase
+    .from('messages')
+    .insert([{ name: name.slice(0, 100), message: message.slice(0, 2000) }]);
 
+  if (error) {
+    msgDiv.innerHTML = '<div class="form-message" style="color:red;">خطا در ارسال پیام.</div>';
+  } else {
     msgDiv.innerHTML = '<div class="form-message form-success">پیام شما با موفقیت ثبت شد.</div>';
     document.getElementById('name').value = '';
     document.getElementById('email').value = '';
     document.getElementById('message').value = '';
+  }
 
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'ارسال پیام';
-
-    renderMessages();
-
-    setTimeout(() => { msgDiv.innerHTML = ''; }, 3000);
-  }, 500);
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'ارسال پیام';
+  renderMessages();
+  setTimeout(() => { msgDiv.innerHTML = ''; }, 3000);
 }
 
 renderMessages();
